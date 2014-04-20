@@ -6,22 +6,25 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
 $(function () {
+		var colorList = ['red','blue','green','black','white','grey','brown','yellow','purple'];
         var table = $('<table></table>').addClass('gameTable');
 		for (j = 0; j < 3; j++) {
-			for (i = 0; i < 3; i++) {
 					row = $('<tr></tr>');
 					for (i = 0; i < 3; i++) {
-						var row1 = $('<td></td>').addClass('bar').text('result ' + i);
+						var number = Math.floor(Math.random() * colorList.length);
+						var row1 = $('<td></td>').addClass('bar');
+						var button = $('<button></button>').text('dsa ').css('background-color', colorList[number]);
+						colorList.splice(number, 1);
 						table.append(row);
 						row.append(row1);
+						row1.append(button);
 					}
-				}
 
 			if ($('table').length) {
-				 $("#someContainer tr:first").after(row);
+				 $("#gameArea tr:first").after(row);
 			}
 			else {
-				$('#someContainer').append(table);
+				$('#gameArea').append(table);
 			}
 		}
 });
@@ -29,7 +32,7 @@ $(function () {
 </head>
 <body>
 
-<div id="someContainer"></div>
+<div id="gameArea"></div>
 
 </body>
 </html>

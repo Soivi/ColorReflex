@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Color Reflex</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+$(function () {
+        var table = $('<table></table>').addClass('gameTable');
+		for (j = 0; j < 3; j++) {
+			for (i = 0; i < 3; i++) {
+					row = $('<tr></tr>');
+					for (i = 0; i < 3; i++) {
+						var row1 = $('<td></td>').addClass('bar').text('result ' + i);
+						table.append(row);
+						row.append(row1);
+					}
+				}
+
+			if ($('table').length) {
+				 $("#someContainer tr:first").after(row);
+			}
+			else {
+				$('#someContainer').append(table);
+			}
+		}
+});
+</script>
+</head>
+<body>
+
+<div id="someContainer"></div>
+
+</body>
+</html>

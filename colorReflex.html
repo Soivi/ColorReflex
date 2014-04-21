@@ -5,15 +5,16 @@
 <title>Color Reflex</title>
 <link href="style.css" rel="stylesheet" type="text/css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="scripts/finalColorListCreator.js"></script>
+<script src="js/finalColorListCreator.js"></script>
 <script>
 $(function () {
 		var timeLeft = 360;
 		var gameTime = 0;
 		var yourRecord = 0;
-		var hard = 5;
-		var medium = 4;
+		var hard = 4;
+		var medium = 3;
 		var easy = 2;
+		var difficulty = easy;
 		var rightAnswers = 0;
 		var totalAnswers = 2;
 		var colorList = finalColorList.slice();
@@ -62,7 +63,7 @@ $(function () {
 		$('.colorButton').on('click', function() {
 			if($(this).css("background-color") == rightAnswer) {
 				rightAnswers++;
-				if(rightAnswers == totalAnswers) {
+				if(rightAnswers >= totalAnswers) {
 					gameFinished();
 				}
 			} else {
@@ -130,12 +131,10 @@ $(function () {
 		function gameIsOn() {
 			timeBarInterval = window.setInterval(function(){
 				gameTime = gameTime + 0.01;
-				if(gameTime.toFixed(2)%0.5==0) {
-					$('#gameTimeText').text(gameTime.toFixed(1));
-				}
-				timeLeft = timeLeft - easy;
+				$('#gameTimeText').text(gameTime.toFixed(2));
+				timeLeft = timeLeft - difficulty;
 				$('#timeBarLeft').css('width', timeLeft);
-				if (timeLeft == 0) {
+				if (timeLeft <= 0) {
 					gameTime = gameTime + 5;
 					newQuestion()
 				} else if (timeLeft < 100) {
@@ -164,11 +163,34 @@ $(function () {
 			}
 		}
 		
+		$('.difficultyLevel').click(function(){
+			document.getElementById("easy").className = "difficultyLevel";
+			document.getElementById("medium").className = "difficultyLevel";
+			document.getElementById("hard").className = "difficultyLevel";
+			
+			document.getElementById(this.id).className = "difficultyLevel activeDifficulty";
+			
+			stopGame();
+			if(this.id == "hard") {
+				difficulty = hard;
+			} else if (this.id == "medium") {
+				difficulty = medium;
+			} else {
+				difficulty = easy;
+			}
+		});
 });
 </script>
 </head>
 <body>
 <div id="wholeGameArea">
+<div id="difficultyNav">
+<ul>
+<li><a class="difficultyLevel activeDifficulty" id="easy">Easy</a></li>
+<li><a class="difficultyLevel" id="medium">Medium</a></li>
+<li><a class="difficultyLevel" id="hard">Hard</a></li>
+</ul>
+</div>
 <p id="rightPoints"></p>
 <p id="gameTimeText"></p>
 <p id="yourRecordText"></p>

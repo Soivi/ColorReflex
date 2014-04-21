@@ -7,7 +7,11 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script>
 $(function () {
-		var colorList = ['Red','Blue','Green','Black','White','Grey','Brown','Yellow','Purple'];
+		var colorList = ['Red','Blue','Green','Black','White','Grey','Brown','Yellow','Purple','Pink','Orange'];
+		for (i = colorList.length; i > 9; i--) {
+			var number = Math.floor(Math.random() * colorList.length);
+			colorList.splice(number, 1);
+		}
 		$('#wantedColor').text(colorList[Math.floor(Math.random() * colorList.length)]).css('color', colorList[Math.floor(Math.random() * colorList.length)]);
         var table = $('<table></table>').addClass('gameTable');
 		for (j = 0; j < 3; j++) {
@@ -35,7 +39,13 @@ $(function () {
 		$('.colorButton').on('click', function() {
 			$('#testP').text($(this).css("background-color"));
 		
-			colorList = ['Red','Blue','Green','Black','White','Grey','Brown','Yellow','Purple'];
+			var colorList = ['Red','Blue','Green','Black','White','Grey','Brown','Yellow','Purple','Pink','Orange'];
+			for (i = colorList.length; i > 9; i--) {
+				var number = Math.floor(Math.random() * colorList.length);
+				colorList.splice(number, 1);
+			}
+			
+			colorList = colorList;
 			$('#wantedColor').text(colorList[Math.floor(Math.random() * colorList.length)]).css('color', colorList[Math.floor(Math.random() * colorList.length)]);
 			for (j = 0; j < 3; j++) {
 						for (i = 0; i < 3; i++) {

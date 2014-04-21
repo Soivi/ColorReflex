@@ -10,16 +10,17 @@
 $(function () {
 		var timeLeft = 360;
 		var gameTime = 0;
+		var yourRecord = 0;
 		var hard = 5;
 		var medium = 4;
 		var easy = 2;
 		var rightAnswers = 0;
-		var wrongAnswers = 0;
+		var totalAnswers = 2;
 		var colorList = finalColorList.slice();
 		var gameOn = false;
-		$('#rightPoints').text('Right ' + rightAnswers);
-		$('#wrongPoints').text('Wrong ' + wrongAnswers);
+		$('#rightPoints').text(rightAnswers + '/' + totalAnswers);
 		$('#gameTimeText').text(gameTime);
+		$('#yourRecordText').text(yourRecord);
 		var timeBarInterval;
 		
 		for (i = colorList.length; i > 9; i--) {
@@ -61,18 +62,20 @@ $(function () {
 		$('.colorButton').on('click', function() {
 			if($(this).css("background-color") == rightAnswer) {
 				rightAnswers++;
+				if(rightAnswers == totalAnswers) {
+					gameFinished();
+				}
 			} else {
-				wrongAnswers++;
+				gameTime = gameTime + 5;
 			}
-				newQuestion();
-			});
+			newQuestion();
+		});
 			
 			
 		function newQuestion() {
 			timeLeft = 360;
 						
-			$('#rightPoints').text('Right ' + rightAnswers);
-			$('#wrongPoints').text('Wrong ' + wrongAnswers);
+		$('#rightPoints').text(rightAnswers + '/' + totalAnswers);
 
 			colorList = finalColorList.slice();
 			for (i = colorList.length; i > 9; i--) {
@@ -108,6 +111,8 @@ $(function () {
 		function startGame() {
 			$('#startStopButton').attr("disabled", true);
 			var time = 2;
+			rightAnswers = 0;
+			gameTime = 0;
 			var interval = window.setInterval(function(){
 				$('#startStopButton').val('Starting ' + time);
 				if(time == 0) {
@@ -131,7 +136,7 @@ $(function () {
 				timeLeft = timeLeft - easy;
 				$('#timeBarLeft').css('width', timeLeft);
 				if (timeLeft == 0) {
-					wrongAnswers++;
+					gameTime = gameTime + 5;
 					newQuestion()
 				} else if (timeLeft < 100) {
 					$('#timeBarLeft').css('background-color', 'red');
@@ -147,6 +152,16 @@ $(function () {
 			$('#startStopButton').val('Start');
 			clearInterval(timeBarInterval);
 			$('.colorButton').attr("disabled", true);
+			gameOn = false;
+		}
+		
+		function gameFinished() {
+			stopGame();
+			window.alert('Your time was: ' + gameTime.toFixed(2));
+			if(gameTime < yourRecord || yourRecord == 0) {
+				yourRecord = gameTime.toFixed(2);
+				$('#yourRecordText').text(yourRecord);
+			}
 		}
 		
 });
@@ -155,8 +170,8 @@ $(function () {
 <body>
 <div id="wholeGameArea">
 <p id="rightPoints"></p>
-<p id="wrongPoints"></p>
 <p id="gameTimeText"></p>
+<p id="yourRecordText"></p>
 <input type="button" id="startStopButton" value="Start"/>
 <h1 id="wantedColor"></h1>
 <div id="timeBar"><div id="timeBarLeft"></div></div>

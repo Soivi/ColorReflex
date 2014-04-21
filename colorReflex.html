@@ -5,21 +5,40 @@
 <title>Color Reflex</title>
 <link href="style.css" rel="stylesheet" type="text/css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="scripts/finalColorListCreator.js"></script>
 <script>
 $(function () {
-		var colorList = ['Red','Blue','Green','Black','White','Grey','Brown','Yellow','Purple','Pink','Orange'];
+		var timeLeft = 360;
+		var gameTime = 0;
+		var hard = 5;
+		var medium = 4;
+		var easy = 2;
+		var rightAnswers = 0;
+		var wrongAnswers = 0;
+		var colorList = finalColorList.slice();
+		var gameOn = false;
+		$('#rightPoints').text('Right ' + rightAnswers);
+		$('#wrongPoints').text('Wrong ' + wrongAnswers);
+		$('#gameTimeText').text(gameTime);
+		var timeBarInterval;
+		
 		for (i = colorList.length; i > 9; i--) {
 			var number = Math.floor(Math.random() * colorList.length);
 			colorList.splice(number, 1);
 		}
-		$('#wantedColor').text(colorList[Math.floor(Math.random() * colorList.length)]).css('color', colorList[Math.floor(Math.random() * colorList.length)]);
+		var wantedColorIndex = Math.floor(Math.random() * colorList.length)
+		var rightAnswer = colorList[wantedColorIndex].rgb;
+		$('#wantedColor').text(colorList[wantedColorIndex].color);
+		$('#wantedColor').css('color', colorList[Math.floor(Math.random() * colorList.length)].color);
+		
         var table = $('<table></table>').addClass('gameTable');
 		for (j = 0; j < 3; j++) {
 					row = $('<tr></tr>');
 					for (i = 0; i < 3; i++) {
 						var number = Math.floor(Math.random() * colorList.length);
 						var row1 = $('<td></td>').addClass('bar');
-						var button = $('<button></button>').text('dsa ').css('background-color', colorList[number]);
+						var button = $('<button></button>').css('background-color', colorList[number].color);
+						button.disabled = true;
 						button.addClass('colorButton');
 						button.attr('id', j + '' + i );
 						colorList.splice(number, 1);
@@ -36,34 +55,112 @@ $(function () {
 			}
 		}
 		
-		$('.colorButton').on('click', function() {
-			$('#testP').text($(this).css("background-color"));
+
+		$('.colorButton').attr("disabled", true);
 		
-			var colorList = ['Red','Blue','Green','Black','White','Grey','Brown','Yellow','Purple','Pink','Orange'];
+		$('.colorButton').on('click', function() {
+			if($(this).css("background-color") == rightAnswer) {
+				rightAnswers++;
+			} else {
+				wrongAnswers++;
+			}
+				newQuestion();
+			});
+			
+			
+		function newQuestion() {
+			timeLeft = 360;
+						
+			$('#rightPoints').text('Right ' + rightAnswers);
+			$('#wrongPoints').text('Wrong ' + wrongAnswers);
+
+			colorList = finalColorList.slice();
 			for (i = colorList.length; i > 9; i--) {
 				var number = Math.floor(Math.random() * colorList.length);
 				colorList.splice(number, 1);
 			}
 			
-			colorList = colorList;
-			$('#wantedColor').text(colorList[Math.floor(Math.random() * colorList.length)]).css('color', colorList[Math.floor(Math.random() * colorList.length)]);
+			wantedColorIndex = Math.floor(Math.random() * colorList.length)
+			rightAnswer = colorList[wantedColorIndex].rgb;
+			$('#wantedColor').text(colorList[wantedColorIndex].color);
+			$('#wantedColor').css('color', colorList[Math.floor(Math.random() * colorList.length)].color);
+			
 			for (j = 0; j < 3; j++) {
 						for (i = 0; i < 3; i++) {
 							var number = Math.floor(Math.random() * colorList.length);
 							var colorButtonIDtemp = j + '' + i ;
-							$('#'+colorButtonIDtemp).css('background-color', colorList[number]);
+							$('#'+colorButtonIDtemp).css('background-color', colorList[number].color);
 							colorList.splice(number, 1);
 						}
 			}
-			});
+		};
+		
+		$('#startStopButton').on('click', function() {
+			if(gameOn) {
+				stopGame();
+				gameOn = false;
+			} else {
+				startGame();
+				gameOn = true;
+			}
+		});
+		
+		function startGame() {
+			$('#startStopButton').attr("disabled", true);
+			var time = 2;
+			var interval = window.setInterval(function(){
+				$('#startStopButton').val('Starting ' + time);
+				if(time == 0) {
+					clearInterval(interval);
+					$('#startStopButton').val('Stop');
+					newQuestion();
+					$('.colorButton').attr("disabled", false);
+					gameIsOn();
+					$('#startStopButton').attr("disabled", false);
+				}
+				time--;
+			}, 1000);
+		}
+		
+		function gameIsOn() {
+			timeBarInterval = window.setInterval(function(){
+				gameTime = gameTime + 0.01;
+				if(gameTime.toFixed(2)%0.5==0) {
+					$('#gameTimeText').text(gameTime.toFixed(1));
+				}
+				timeLeft = timeLeft - easy;
+				$('#timeBarLeft').css('width', timeLeft);
+				if (timeLeft == 0) {
+					wrongAnswers++;
+					newQuestion()
+				} else if (timeLeft < 100) {
+					$('#timeBarLeft').css('background-color', 'red');
+				} else if (timeLeft < 200) {
+					$('#timeBarLeft').css('background-color', 'yellow');
+				} else {
+					$('#timeBarLeft').css('background-color', 'rgb(120,240,30)');
+				}
+			}, 10);
+		}
+		
+		function stopGame() {
+			$('#startStopButton').val('Start');
+			clearInterval(timeBarInterval);
+			$('.colorButton').attr("disabled", true);
+		}
 		
 });
 </script>
 </head>
 <body>
-<p id="testP">testP</p>
+<div id="wholeGameArea">
+<p id="rightPoints"></p>
+<p id="wrongPoints"></p>
+<p id="gameTimeText"></p>
+<input type="button" id="startStopButton" value="Start"/>
 <h1 id="wantedColor"></h1>
+<div id="timeBar"><div id="timeBarLeft"></div></div>
 <div id="gameArea"></div>
-
+</div>
 </body>
 </html>

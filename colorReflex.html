@@ -110,19 +110,19 @@ $(function () {
 		});
 		
 		function startGame() {
-			$('#startStopButton').attr("disabled", true);
+			$('#startStopButton').attr("disabled", "disabled");
 			var time = 2;
 			rightAnswers = 0;
 			gameTime = 0;
 			var interval = window.setInterval(function(){
-				$('#startStopButton').val('Starting ' + time);
+				$('#startStopButton').text('Starting ' + time);
 				if(time == 0) {
 					clearInterval(interval);
-					$('#startStopButton').val('Stop');
+					$('#startStopButton').text('Stop');
 					newQuestion();
 					$('.colorButton').attr("disabled", false);
 					gameIsOn();
-					$('#startStopButton').attr("disabled", false);
+					$('#startStopButton').removeAttr("disabled");
 				}
 				time--;
 			}, 1000);
@@ -148,7 +148,7 @@ $(function () {
 		}
 		
 		function stopGame() {
-			$('#startStopButton').val('Start');
+			$('#startStopButton').text('Start');
 			clearInterval(timeBarInterval);
 			$('.colorButton').attr("disabled", true);
 			gameOn = false;
@@ -184,17 +184,21 @@ $(function () {
 </head>
 <body>
 <div id="wholeGameArea">
-<div id="difficultyNav">
-<ul>
+<div id="navBarDiv">
+<ul id="difficultyLevelNav">
 <li><a class="difficultyLevel activeDifficulty" id="easy">Easy</a></li>
 <li><a class="difficultyLevel" id="medium">Medium</a></li>
 <li><a class="difficultyLevel" id="hard">Hard</a></li>
+</ul>
+<ul id="naviSecondRowNav">
+<li><a class="naviSecondRow" id="info">Info</a></li>
+<li><a class="naviSecondRow" id="highscores">High scores</a></li>
+<li><a class="naviSecondRow" id="startStopButton">Start</a></li>
 </ul>
 </div>
 <p id="rightPoints"></p>
 <p id="gameTimeText"></p>
 <p id="yourRecordText"></p>
-<input type="button" id="startStopButton" value="Start"/>
 <h1 id="wantedColor"></h1>
 <div id="timeBar"><div id="timeBarLeft"></div></div>
 <div id="gameArea"></div>

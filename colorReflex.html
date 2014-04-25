@@ -49,8 +49,8 @@ $(function () {
 						row1.append(button);
 					}
 
-			if ($('table').length) {
-				 $("#gameArea tr:first").after(row);
+			if ($('.gameTable').length) {
+				 $(".gameTable tr:first").after(row);
 			}
 			else {
 				$('#gameArea').append(table);
@@ -110,7 +110,8 @@ $(function () {
 		});
 		
 		function startGame() {
-			$('#startStopButton').attr("disabled", "disabled");
+			$('.difficultyLevel').attr("disabled", "disabled");
+			$('.difficultyLevel').attr("disabled", "disabled");
 			var time = 2;
 			rightAnswers = 0;
 			gameTime = 0;
@@ -122,7 +123,8 @@ $(function () {
 					newQuestion();
 					$('.colorButton').attr("disabled", false);
 					gameIsOn();
-					$('#startStopButton').removeAttr("disabled");
+					$('.difficultyLevel').removeAttr("disabled");
+					$('.naviSecondRow').removeAttr("disabled");
 				}
 				time--;
 			}, 1000);
@@ -196,9 +198,20 @@ $(function () {
 <li><a class="naviSecondRow" id="startStopButton">Start</a></li>
 </ul>
 </div>
-<p id="rightPoints"></p>
-<p id="gameTimeText"></p>
-<p id="yourRecordText"></p>
+
+<table id="statisticsTable">
+<tr>
+<td>Points</td>
+<td>Time</td>
+<td>Your record</td>
+</tr>
+<tr>
+<td id="rightPoints"></td>
+<td id="gameTimeText"></td>
+<td id="yourRecordText"></td>
+</tr>
+</table>
+
 <h1 id="wantedColor"></h1>
 <div id="timeBar"><div id="timeBarLeft"></div></div>
 <div id="gameArea"></div>

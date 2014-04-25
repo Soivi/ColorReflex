@@ -8,6 +8,10 @@
 <script src="js/finalColorListCreator.js"></script>
 <script>
 $(function () {
+		$('#infoBar').hide();
+		$('#highScoresBar').hide();
+		var infobarhidden = true;
+		var highscorebarhidden = true;
 		var timeLeft = 360;
 		var gameTime = 0;
 		var yourRecord = 0;
@@ -57,7 +61,6 @@ $(function () {
 			}
 		}
 		
-
 		$('.colorButton').attr("disabled", true);
 		
 		$('.colorButton').on('click', function() {
@@ -111,7 +114,7 @@ $(function () {
 		
 		function startGame() {
 			$('.difficultyLevel').attr("disabled", "disabled");
-			$('.difficultyLevel').attr("disabled", "disabled");
+			$('.naviSecondRow').attr("disabled", "disabled");
 			var time = 2;
 			rightAnswers = 0;
 			gameTime = 0;
@@ -181,6 +184,29 @@ $(function () {
 				difficulty = easy;
 			}
 		});
+		
+		$('#info').on('click', function() {
+			if(infobarhidden) {
+				document.getElementById(this.id).className = "naviSecondRow activeDifficulty";
+				infobarhidden = false;
+			} else {
+				document.getElementById(this.id).className = "naviSecondRow";
+				infobarhidden = true;
+			}
+			$('#infoBar').fadeToggle(1500);
+		});
+		
+		$('#highscores').on('click', function() {
+			if(highscorebarhidden) {
+				document.getElementById(this.id).className = "naviSecondRow activeDifficulty";
+				highscorebarhidden = false;
+			} else {
+				document.getElementById(this.id).className = "naviSecondRow";
+				highscorebarhidden = true;
+			}
+			$('#highScoresBar').fadeToggle(1500);
+		});
+
 });
 </script>
 </head>
@@ -197,6 +223,13 @@ $(function () {
 <li><a class="naviSecondRow" id="highscores">High scores</a></li>
 <li><a class="naviSecondRow" id="startStopButton">Start</a></li>
 </ul>
+</div>
+<div id="infoBar" class="hiddenBars">
+<h1>These are instructions</h1>
+</div>
+
+<div id="highScoresBar" class="hiddenBars">
+<h1>Here is highscores</h1>
 </div>
 
 <table id="statisticsTable">

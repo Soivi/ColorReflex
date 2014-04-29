@@ -20,7 +20,7 @@ $(function () {
 		var easy = 2;
 		var difficulty = easy;
 		var rightAnswers = 0;
-		var totalAnswers = 2;
+		var totalAnswers = 20;
 		var colorList = finalColorList.slice();
 		var gameOn = false;
 		$('#rightPoints').text(rightAnswers + '/' + totalAnswers);
@@ -115,7 +115,7 @@ $(function () {
 		function startGame() {
 			$('.difficultyLevel').attr("disabled", "disabled");
 			$('.naviSecondRow').attr("disabled", "disabled");
-			var time = 2;
+			var time = 5;
 			rightAnswers = 0;
 			gameTime = 0;
 			var interval = window.setInterval(function(){
@@ -225,11 +225,77 @@ $(function () {
 </ul>
 </div>
 <div id="infoBar" class="hiddenBars">
-<h1>These are instructions</h1>
+<p></p>
 </div>
 
 <div id="highScoresBar" class="hiddenBars">
-<h1>Here is highscores</h1>
+<table id="highScoreTable">
+<tr>
+<th>Place</th>
+<th>Name</th>
+<th>Time</th>
+</tr>
+
+<tr>
+<td>1.</td>
+<td>Jane</td>
+<td>100.89</td>
+</tr>
+
+<tr>
+<td>2.</td>
+<td>Jill</td>
+<td>110.89</td>
+</tr>
+
+<tr>
+<td>3.</td>
+<td>Walter</td>
+<td>115.89</td>
+</tr>
+
+<tr>
+<td>4.</td>
+<td>Eve</td>
+<td>135.89</td>
+</tr>
+
+<tr>
+<td>5.</td>
+<td>John</td>
+<td>143.89</td>
+</tr>
+
+<tr>
+<td>6.</td>
+<td>Adam</td>
+<td>146.89</td>
+</tr>
+
+<tr>
+<td>7.</td>
+<td>Aden</td>
+<td>157.89</td>
+</tr>
+
+<tr>
+<td>8.</td>
+<td>Steven</td>
+<td>240.89</td>
+</tr>
+
+<tr>
+<td>9.</td>
+<td>Santos</td>
+<td>256.89</td>
+</tr>
+
+<tr>
+<td>10.</td>
+<td>Alexis</td>
+<td>277.89</td>
+</tr>
+</table>
 </div>
 
 <table id="statisticsTable">

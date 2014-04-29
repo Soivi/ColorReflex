@@ -148,7 +148,6 @@ a[disabled] {
 }
 
 .hiddenBars {
-	background-color:rgb(150,255,155);
 	z-index:2;
 	position:absolute;
 	width:500px;
@@ -159,4 +158,20 @@ a[disabled] {
 	-moz-border-radius-bottomright: 10px;
 	border-bottom-left-radius: 10px;
 	border-bottom-right-radius: 10px;
+}
+
+#infoBar {
+	background-color:rgb(245,245,155);
+}
+
+#highScoresBar {
+	background-color:rgb(160,235,155);
+}
+
+#highScoreTable {
+	width:400px;
+	height:470px;
+	margin:auto;
+	font-size:20px;
+	text-align:center;
 }

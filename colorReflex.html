@@ -14,20 +14,24 @@ $(function () {
 		var highscorebarhidden = true;
 		var timeLeft = 360;
 		var gameTime = 0;
-		var yourRecord = 0;
-		var hard = 4;
-		var medium = 3;
-		var easy = 2;
+		var yourRecordHard = 0;
+		var yourRecordMedium = 0;
+		var yourRecordEasy = 0;
+		var hard = 3.5;
+		var medium = 2.5;
+		var easy = 1.5;
 		var difficulty = easy;
 		var rightAnswers = 0;
-		var totalAnswers = 20;
+		var totalAnswers = 2;
 		var colorList = finalColorList.slice();
 		var gameOn = false;
 		$('#rightPoints').text(rightAnswers + '/' + totalAnswers);
 		$('#gameTimeText').text(gameTime);
-		$('#yourRecordText').text(yourRecord);
+		$('#yourRecordText').text(yourRecordEasy);
 		var timeBarInterval;
+		var plname = "";
 		
+		// Random first Quess
 		for (i = colorList.length; i > 9; i--) {
 			var number = Math.floor(Math.random() * colorList.length);
 			colorList.splice(number, 1);
@@ -37,6 +41,7 @@ $(function () {
 		$('#wantedColor').text(colorList[wantedColorIndex].color);
 		$('#wantedColor').css('color', colorList[Math.floor(Math.random() * colorList.length)].color);
 		
+		// Create table
         var table = $('<table></table>').addClass('gameTable');
 		for (j = 0; j < 3; j++) {
 					row = $('<tr></tr>');
@@ -60,9 +65,10 @@ $(function () {
 				$('#gameArea').append(table);
 			}
 		}
-		
+		// Disable buttons because game isn't on
 		$('.colorButton').attr("disabled", true);
 		
+		// Check if quess is right.
 		$('.colorButton').on('click', function() {
 			if($(this).css("background-color") == rightAnswer) {
 				rightAnswers++;
@@ -75,7 +81,7 @@ $(function () {
 			newQuestion();
 		});
 			
-			
+		// Create new quess and update gameAreaButtons
 		function newQuestion() {
 			timeLeft = 360;
 						
@@ -102,6 +108,7 @@ $(function () {
 			}
 		};
 		
+		// Start and stop function
 		$('#startStopButton').on('click', function() {
 			if(gameOn) {
 				stopGame();
@@ -112,9 +119,11 @@ $(function () {
 			}
 		});
 		
+		// Game is starting function. Reset variables to new game
 		function startGame() {
 			$('.difficultyLevel').attr("disabled", "disabled");
 			$('.naviSecondRow').attr("disabled", "disabled");
+			// how long take to start game
 			var time = 5;
 			rightAnswers = 0;
 			gameTime = 0;
@@ -133,6 +142,7 @@ $(function () {
 			}, 1000);
 		}
 		
+		// When game is on. Add more gametime and take time off from timebar
 		function gameIsOn() {
 			timeBarInterval = window.setInterval(function(){
 				gameTime = gameTime + 0.01;
@@ -152,6 +162,7 @@ $(function () {
 			}, 10);
 		}
 		
+		// Stops game. Stops timebar and gametime.
 		function stopGame() {
 			$('#startStopButton').text('Start');
 			clearInterval(timeBarInterval);
@@ -159,15 +170,33 @@ $(function () {
 			gameOn = false;
 		}
 		
+		// When game is over send highscores to database if you play difficulty hard and save highscore records.
 		function gameFinished() {
 			stopGame();
-			window.alert('Your time was: ' + gameTime.toFixed(2));
-			if(gameTime < yourRecord || yourRecord == 0) {
-				yourRecord = gameTime.toFixed(2);
-				$('#yourRecordText').text(yourRecord);
+
+			if(difficulty == hard && (gameTime < yourRecordHard || yourRecordHard == 0)) {
+				yourRecordHard = gameTime.toFixed(2);
+				$('#yourRecordText').text(yourRecordHard);
+				
+				if (!plname) {
+					plname=prompt("Please enter your name to highscores", "");
+				}
+				
+				if (plname) {
+					plname = plname.substr( 0, 25 );
+					$.getJSON('http://colorreflex.soivi.net/highscores.php?callback=?',{highscorelist:'Insert', name:plname, time:yourRecordHard});
+				}
+
+			} else if (difficulty == medium && (gameTime < yourRecordMedium || yourRecordMedium == 0)) {
+				yourRecordMedium = gameTime.toFixed(2);
+				$('#yourRecordText').text(yourRecordMedium);
+			} else if (difficulty == easy && (gameTime < yourRecordEasy || yourRecordEasy == 0)) {
+				yourRecordEasy = gameTime.toFixed(2);
+				$('#yourRecordText').text(yourRecordEasy);
 			}
 		}
 		
+		// Changes difficulty level
 		$('.difficultyLevel').click(function(){
 			document.getElementById("easy").className = "difficultyLevel";
 			document.getElementById("medium").className = "difficultyLevel";
@@ -177,14 +206,18 @@ $(function () {
 			
 			stopGame();
 			if(this.id == "hard") {
+				$('#yourRecordText').text(yourRecordHard);
 				difficulty = hard;
 			} else if (this.id == "medium") {
+				$('#yourRecordText').text(yourRecordMedium);
 				difficulty = medium;
 			} else {
+				$('#yourRecordText').text(yourRecordEasy);
 				difficulty = easy;
 			}
 		});
 		
+		// Infobar is visible or hidden.
 		$('#info').on('click', function() {
 			if(infobarhidden) {
 				document.getElementById(this.id).className = "naviSecondRow activeDifficulty";
@@ -196,8 +229,28 @@ $(function () {
 			$('#infoBar').fadeToggle(1500);
 		});
 		
+		// Highscores are visible or hidden. When Highscores comes to visible reset highscores and get newest highscores from database.
 		$('#highscores').on('click', function() {
 			if(highscorebarhidden) {
+				$('#highScoreTable tr.highscoreRow').remove();
+				
+				$.getJSON('http://colorreflex.soivi.net/highscores.php?callback=?','highscorelist=All',function(res){
+					var forLoopSize = 9;
+					if (res.length <= forLoopSize) {
+						forLoopSize = res.length - 1; 
+					}
+					for (j = forLoopSize; j >= 0; j--) {
+							row = $('<tr></tr>').addClass('highscoreRow');
+							var place = $('<td></td>').text(j+1);
+							var name = $('<td></td>').text(res[j].name);
+							var time = $('<td></td>').text(res[j].time);
+							$("#highScoreTable").append(row);
+							row.append(place);
+							row.append(name);
+							row.append(time);
+						 $("#highScoreTable tr:first").after(row);
+				}
+				});
 				document.getElementById(this.id).className = "naviSecondRow activeDifficulty";
 				highscorebarhidden = false;
 			} else {
@@ -206,7 +259,6 @@ $(function () {
 			}
 			$('#highScoresBar').fadeToggle(1500);
 		});
-
 });
 </script>
 </head>
@@ -240,67 +292,7 @@ $(function () {
 <tr>
 <th>Place</th>
 <th>Name</th>
-<th>Time</th>
-</tr>
-
-<tr>
-<td>1.</td>
-<td>Jane</td>
-<td>100.89</td>
-</tr>
-
-<tr>
-<td>2.</td>
-<td>Jill</td>
-<td>110.89</td>
-</tr>
-
-<tr>
-<td>3.</td>
-<td>Walter</td>
-<td>115.89</td>
-</tr>
-
-<tr>
-<td>4.</td>
-<td>Eve</td>
-<td>135.89</td>
-</tr>
-
-<tr>
-<td>5.</td>
-<td>John</td>
-<td>143.89</td>
-</tr>
-
-<tr>
-<td>6.</td>
-<td>Adam</td>
-<td>146.89</td>
-</tr>
-
-<tr>
-<td>7.</td>
-<td>Aden</td>
-<td>157.89</td>
-</tr>
-
-<tr>
-<td>8.</td>
-<td>Steven</td>
-<td>240.89</td>
-</tr>
-
-<tr>
-<td>9.</td>
-<td>Santos</td>
-<td>256.89</td>
-</tr>
-
-<tr>
-<td>10.</td>
-<td>Alexis</td>
-<td>277.89</td>
+<th>Time (hard)</th>
 </tr>
 </table>
 </div>

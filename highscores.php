@@ -1,6 +1,7 @@
 <?php	
 try {
-	$db = new PDO('mysql:host=localhost;dbname=testdb;charset=utf8', 'username', 'password');
+	$config = parse_ini_file("config.ini", 1);
+	$db = new PDO('mysql:host=' . $config['database']['db_host'] . ';dbname=' . $config['database']['db_database'] . ';charset=utf8', $config['database']['db_username'], $config['database']['db_password']);
 	
 	// Get all highscores
 	if($_GET['highscorelist'] == 'All') {		

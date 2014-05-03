@@ -8,6 +8,11 @@
 <script src="js/finalColorListCreator.js"></script>
 <script>
 $(function () {
+		var url;
+		$.getJSON('config.json', function(data) {
+			url = data.url;
+        });
+		
 		$('#infoBar').hide();
 		$('#highScoresBar').hide();
 		var infobarhidden = true;
@@ -184,7 +189,7 @@ $(function () {
 				
 				if (plname) {
 					plname = plname.substr( 0, 25 );
-					$.getJSON('http://colorreflex.soivi.net/highscores.php?callback=?',{highscorelist:'Insert', name:plname, time:yourRecordHard});
+					$.getJSON( url + '?callback=?',{highscorelist:'Insert', name:plname, time:yourRecordHard});
 				}
 
 			} else if (difficulty == medium && (gameTime < yourRecordMedium || yourRecordMedium == 0)) {
@@ -234,7 +239,7 @@ $(function () {
 			if(highscorebarhidden) {
 				$('#highScoreTable tr.highscoreRow').remove();
 				
-				$.getJSON('http://colorreflex.soivi.net/highscores.php?callback=?','highscorelist=All',function(res){
+				$.getJSON( url + '?callback=?','highscorelist=All',function(res){
 					var forLoopSize = 9;
 					if (res.length <= forLoopSize) {
 						forLoopSize = res.length - 1; 

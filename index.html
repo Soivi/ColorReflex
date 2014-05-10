@@ -129,7 +129,7 @@ $(function () {
 			$('#rightPoints').css('color', 'black').css('font-weight', 'normal');
 			$('#yourRecordText').css('color', 'black').css('font-weight', 'normal');
 			$('.difficultyLevel').attr("disabled", "disabled");
-			$('.naviSecondRow').attr("disabled", "disabled");
+
 			// how long take to start game
 			var time = 5;
 			rightAnswers = 0;
@@ -143,7 +143,7 @@ $(function () {
 					$('.colorButton').attr("disabled", false);
 					gameIsOn();
 					$('.difficultyLevel').removeAttr("disabled");
-					$('.naviSecondRow').removeAttr("disabled");
+
 				}
 				time--;
 			}, 1000);

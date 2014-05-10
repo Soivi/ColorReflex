@@ -53,7 +53,7 @@ $(function () {
 					for (i = 0; i < 3; i++) {
 						var number = Math.floor(Math.random() * colorList.length);
 						var row1 = $('<td></td>').addClass('bar');
-						var button = $('<button></button>').css('background-color', colorList[number].color);
+						var button = $('<button></button>').css('background-color', colorList[number].rgb);
 						button.disabled = true;
 						button.addClass('colorButton');
 						button.attr('id', j + '' + i );
@@ -107,7 +107,7 @@ $(function () {
 						for (i = 0; i < 3; i++) {
 							var number = Math.floor(Math.random() * colorList.length);
 							var colorButtonIDtemp = j + '' + i ;
-							$('#'+colorButtonIDtemp).css('background-color', colorList[number].color);
+							$('#'+colorButtonIDtemp).css('background-color', colorList[number].rgb);
 							colorList.splice(number, 1);
 						}
 			}
